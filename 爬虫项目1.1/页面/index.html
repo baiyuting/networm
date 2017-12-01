@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/echarts.min.js"></script>
+    <script>
+        function refresh(params) {
+            var xmlhttp;
+            if (window.XMLHttpRequest) {
+                //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                xmlhttp = new XMLHttpRequest();
+            }
+            else {
+                // IE6, IE5 浏览器执行代码
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var array = eval(xmlhttp.responseText);
+                    //显示 echarts图
+                    draw(array);
+
+                }
+            }
+            xmlhttp.open("GET", "http://localhost:8080/wordCount/list?t=" + Math.random(), true);
+            xmlhttp.send();
+        }
+
+        function draw(params) {
+            var myChart = echarts.init(document.getElementById('main'));
+
+            var wordList = [];
+            for (let index = 0; index < params.length; index++) {
+                const element = params[index];
+                wordList[index]=element.word;
+            }
+
+            var countList = [];
+            for (let index = 0; index < params.length; index++) {
+                const element = params[index];
+                countList[index] = element.count;
+            }
+
+            alert(wordList);
+
+            var option = {
+                title: {
+                    text: 'Sina 科技热词展示'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['科技热词']
+                },
+                xAxis: {
+                    // data: ["手机", "iphone", "双", "智能", "ai", "快递", "屏", "单车", "共享", "人工智能"]
+                    data: wordList
+                },
+                yAxis: {},
+                series: [{
+                    name: '次数',
+                    type: 'bar',
+                    // data: [89, 87, 52, 47, 43, 43, 40, 40, 38, 38]
+                    data:countList
+                }]
+            };
+
+            myChart.setOption(option);
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="refresh()" value="">点击获取词频图</button>
+    <div id="main" style="width: 900px;height:400px;"></div>
+</body>
+
+</html>
