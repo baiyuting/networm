@@ -7,6 +7,7 @@ import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -39,7 +40,9 @@ public class LoadDbService {
                 List<String> allKeywords = new ArrayList<>();
                 for (int j = 0; j < terms.size(); j++) {
                     Term term = terms.get(j);
-                    allKeywords.add(term.getName());
+                    if (null != term.getName() && !"".equals(term.getName().trim()) && term.getName().length() > 1) {
+                        allKeywords.add(term.getName());
+                    }
                 }
                 for (String keyword : allKeywords) {
                     // 先判断这个词在Map中是否已经保存过了
